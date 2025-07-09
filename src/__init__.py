@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 __version__ = "0.0.1"
 __author__ = "Team Artometrix"
 __email__ = "contact@artometrix.com"

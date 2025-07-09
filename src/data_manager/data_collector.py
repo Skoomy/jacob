@@ -187,7 +187,6 @@ class DataCollector:
                 market_data = self.gov_collector.collect_alcohol_sales_data()
             else:
                 logger.warning(f"Unknown market data source: {market_data_source}")
-                raise ValueError(f"Unknown market data source: {market_data_source}")
                 market_data = pd.DataFrame()
 
             if not market_data.empty:
@@ -197,22 +196,32 @@ class DataCollector:
         except Exception as e:
             logger.error(f"Failed to collect market data: {e}")
 
-        # Collect related queries for each search term
-        try:
-            search_terms = industry_config.get("search_terms", [])
-            for term in search_terms[:3]:  # Limit to first 3 to avoid rate limiting
-                related_queries = self.google_collector.collect_related_queries(term)
-                if related_queries:
-                    collected_data[f"related_queries_{term}"] = related_queries
-                    self._save_related_queries(
-                        related_queries, f"{industry_name}_related_queries_{term}.json"
-                    )
-        except Exception as e:
-            logger.error(f"Failed to collect related queries: {e}")
+        # # Collect related queries for each search term
+        # try:
+        #     search_terms = industry_config.get("search_terms", [])
+        #     for term in search_terms[:3]:  # Limit to first 3 to avoid rate limiting
+        #         related_queries = self.google_collector.collect_related_queries(term)
+        #         if related_queries:
+        #             collected_data[f"related_queries_{term}"] = related_queries
+        #             self._save_related_queries(
+        #                 related_queries, f"{industry_name}_related_queries_{term}.json"
+        #             )
+        # except Exception as e:
+        #     logger.error(f"Failed to collect related queries: {e}")
+        # Collect Google Trends data source
+        google_trend_data_source = self.config.get("google_trend_data_source")
+        if google_trend_data_source:
+            logger.info(
+                f"Using pre-collected Google Trends data from  {google_trend_data_source}"
+            )
+            collected_data["google_trends"] = pd.read_csv(google_trend_data_source)
+        else:
+            logger.warning("No Google Trends data source configured")
 
         logger.info(
             f"Data collection completed. Collected {len(collected_data)} datasets"
         )
+
         return collected_data
 
     def _save_data(self, data: pd.DataFrame, filename: str) -> None:

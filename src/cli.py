@@ -6,7 +6,7 @@ CLI interface for the application
 import click
 import logging
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import yaml
 
 from .utils.logger import get_logger, setup_logging
@@ -50,23 +50,45 @@ def cli(ctx, log_level, log_file, config):
 @click.option(
     "--output-dir", type=click.Path(), default="output", help="Output directory"
 )
+@click.option(
+    "--config", type=click.Path(exists=True), help="Configuration file (overrides global config)"
+)
 @click.pass_context
-def analyze(ctx, industry: str, output_dir: str):
+def analyze(ctx, industry: str, output_dir: str, config: Optional[str]):
     """Run the complete Share of Voice vs Market Share analysis pipeline."""
     logger.info(f"Starting analysis for {industry} industry")
 
-    config = ctx.obj["config"]
-    config["industry"] = industry
-    config["output_dir"] = Path(output_dir)
+    # Use command-level config if provided, otherwise use global config
+    if config:
+        analysis_config = ConfigManager.load_config(config)
+    else:
+        analysis_config = ctx.obj["config"].copy()
+    
+    # Get industry-specific configuration
+    try:
+        industry_config = ConfigManager.get_industry_config(industry)
+        analysis_config["industry"] = {
+            "name": industry_config.name,
+            "brands": industry_config.brands,
+            "search_terms": industry_config.search_terms,
+            "market_data_source": industry_config.market_data_source,
+            "analysis_period": industry_config.analysis_period,
+            "seasonality_adjustments": getattr(industry_config, 'seasonality_adjustments', True)
+        }
+    except ValueError:
+        logger.warning(f"No predefined configuration for {industry} industry, using basic config")
+        analysis_config["industry"] = {"name": industry}
+    
+    analysis_config["output_dir"] = Path(output_dir)
 
     # Initialize pipeline
-    pipeline = AnalysisPipeline(config)
+    pipeline = AnalysisPipeline(analysis_config)
 
     # Run analysis
     results = pipeline.run()
 
     # Generate reports
-    report_generator = ReportGenerator(config)
+    report_generator = ReportGenerator(analysis_config)
     report_generator.generate_final_report(results)
 
     logger.info("Analysis completed successfully")
