@@ -1,0 +1,58 @@
+---
+# Jacob: Share of Voice vs Market Share Analysis Platform
+# Default Configuration File
+
+data_sources:
+  google_trends:
+    geo: "GB"
+    timeframe: "today 5-y"
+    category: 0
+    sleep_between_requests: 1
+  uk_gov_stats:
+    base_url: "https://www.gov.uk/government/statistics"
+    cache_duration: 3600
+    retry_attempts: 3
+  update_frequency: "daily"
+
+modeling:
+  prior_distributions:
+    intercept: 
+      distribution: "normal"
+      mu: 0
+      sigma: 1
+    slope:
+      distribution: "normal"
+      mu: 0
+      sigma: 0.5
+    noise:
+      distribution: "half_normal"
+      sigma: 0.1
+  mcmc_samples: 2000
+  tune_samples: 1000
+  chains: 4
+  target_accept: 0.95
+  random_seed: 42
+
+visualization:
+  theme: "plotly_white"
+  width: 1200
+  height: 800
+  export_formats: ["html", "png", "svg"]
+  color_palette: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]
+
+reporting:
+  output_format: "txt"
+  include_sections:
+    - "executive_summary"
+    - "methodology"
+    - "data_overview"
+    - "model_results"
+    - "model_diagnostics"
+    - "conclusions"
+    - "recommendations"
+  auto_save: true
+  timestamp_reports: true
+
+output_dir: "output"
+log_level: "INFO"
+created_at: "2024-01-01T00:00:00"

@@ -1,0 +1,74 @@
+---
+# Jacob: Automotive Industry Analysis Configuration
+# Based on default.yaml with automotive-specific settings
+
+data_sources:
+  google_trends:
+    geo: "GB"
+    timeframe: "today 5-y"
+    category: 0
+    sleep_between_requests: 1
+  uk_gov_stats:
+    base_url: "https://www.gov.uk/government/statistics"
+    cache_duration: 3600
+    retry_attempts: 3
+  update_frequency: "daily"
+
+modeling:
+  prior_distributions:
+    intercept: 
+      distribution: "normal"
+      mu: 0
+      sigma: 1
+    slope:
+      distribution: "normal"
+      mu: 0.5
+      sigma: 0.3
+    noise:
+      distribution: "half_normal"
+      sigma: 0.1
+  mcmc_samples: 2000
+  tune_samples: 1000
+  chains: 4
+  target_accept: 0.95
+  random_seed: 42
+
+visualization:
+  theme: "plotly_white"
+  width: 1200
+  height: 800
+  export_formats: ["html", "png", "svg"]
+  color_palette: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]
+
+reporting:
+  output_format: "txt"
+  include_sections:
+    - "executive_summary"
+    - "methodology"
+    - "data_overview"
+    - "model_results"
+    - "model_diagnostics"
+    - "conclusions"
+    - "recommendations"
+  auto_save: true
+  timestamp_reports: true
+
+industry:
+  name: "automotive"
+  brands: ["Tesla", "BMW", "Mercedes", "Audi", "Jaguar", "Volvo", "Nissan", "Ford"]
+  search_terms: 
+    - "electric car"
+    - "EV"
+    - "tesla model"
+    - "bmw electric"
+    - "mercedes electric"
+    - "audi e-tron"
+    - "electric vehicle"
+  market_data_source: "uk_gov_vehicle_registrations"
+  analysis_period:
+    start: "2010-01-01"
+    end: "2024-12-31"
+  seasonality_adjustments: true
+
+output_dir: "output/automotive"
+log_level: "INFO"
