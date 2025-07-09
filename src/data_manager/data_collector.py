@@ -191,7 +191,7 @@ class DataCollector:
 
             if not market_data.empty:
                 collected_data["market_data"] = market_data
-                self._save_data(market_data, f"{industry_name}_market_data.csv")
+                self._save_data(market_data, f"{industry_name}_market_data.xlsx")
 
         except Exception as e:
             logger.error(f"Failed to collect market data: {e}")
@@ -210,8 +210,6 @@ class DataCollector:
         #     logger.error(f"Failed to collect related queries: {e}")
         # Collect Google Trends data source
         google_trend_data_source = industry_config.get("google_trend_data_source", "")
-        print(f"google_trend_data_source: {google_trend_data_source}")
-        print(f"industry_config: {industry_config}")
 
         if google_trend_data_source:
             logger.info(
@@ -219,9 +217,10 @@ class DataCollector:
             )
             try:
                 collected_data["google_trends"] = pd.read_csv(google_trend_data_source)
-                import rich
-
-                rich.print(collected_data)
+                self._save_data(
+                    collected_data["google_trends"],
+                    f"{industry_name}_google_trends.xlsx",
+                )
 
             except FileNotFoundError:
                 logger.warning(
@@ -239,10 +238,10 @@ class DataCollector:
         return collected_data
 
     def _save_data(self, data: pd.DataFrame, filename: str) -> None:
-        """Save DataFrame to CSV file."""
+        """Save DataFrame to Excel file."""
         try:
             filepath = self.output_dir / filename
-            data.to_csv(filepath, index=True)
+            data.to_excel(filepath, index=True)
             logger.info(f"Saved data to {filepath}")
         except Exception as e:
             logger.error(f"Failed to save data to {filename}: {e}")
