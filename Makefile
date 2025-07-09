@@ -50,8 +50,8 @@ setup-dirs:
 # Start development environment
 dev-shell:
 	@echo "$(GREEN)Starting development environment...$(NC)"
-	docker-compose -f docker/docker-compose.yaml up jacob
-	docker-compose exec jacob bash
+	docker-compose -f docker/docker-compose.yaml up -d jacob
+	docker-compose -f docker/docker-compose.yaml exec jacob bash
 # Start Jupyter Lab environment
 jupyter:
 	@echo "Starting Jupyter Lab environment..."
