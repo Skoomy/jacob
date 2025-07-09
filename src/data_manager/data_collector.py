@@ -164,16 +164,16 @@ class DataCollector:
 
         collected_data = {}
 
-        # Collect Google Trends data
-        try:
-            search_terms = industry_config.get("search_terms", [])
-            if search_terms:
-                trends_data = self.google_collector.collect_trends_data(search_terms)
-                if not trends_data.empty:
-                    collected_data["google_trends"] = trends_data
-                    self._save_data(trends_data, f"{industry_name}_google_trends.csv")
-        except Exception as e:
-            logger.error(f"Failed to collect Google Trends data: {e}")
+        # # Collect Google Trends data
+        # try:
+        #     search_terms = industry_config.get("search_terms", [])
+        #     if search_terms:
+        #         trends_data = self.google_collector.collect_trends_data(search_terms)
+        #         if not trends_data.empty:
+        #             collected_data["google_trends"] = trends_data
+        #             self._save_data(trends_data, f"{industry_name}_google_trends.csv")
+        # except Exception as e:
+        #     logger.error(f"Failed to collect Google Trends data: {e}")
 
         # Collect market data based on industry
         try:
@@ -215,6 +215,11 @@ class DataCollector:
                 f"Using pre-collected Google Trends data from  {google_trend_data_source}"
             )
             collected_data["google_trends"] = pd.read_csv(google_trend_data_source)
+            import rich
+
+            rich.print(
+                f"[green]Loaded Google Trends data from {google_trend_data_source}[/green]"
+            )
         else:
             logger.warning("No Google Trends data source configured")
 

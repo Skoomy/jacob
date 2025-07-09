@@ -55,16 +55,15 @@ reporting:
 
 industry:
   name: "automotive"
-  brands: ["Tesla", "BMW", "Mercedes", "Audi", "Jaguar", "Volvo", "Nissan", "Volkswagen","Toyota"]
+  brands: [ "BMW", "Mercedes", "Audi", "Ford", "Volvo", "Volkswagen",]
   search_terms: 
     - "electric car"
     - "EV"
-    - "tesla model"
     - "bmw electric"
     - "mercedes electric"
     - "audi e-tron"
     - "electric vehicle"
-  google_trend_data_source: data/uk_gov_search_terms.csv
+  google_trend_data_source: "data/google_trend_automotive.csv"
   market_data_source: uk_gov_vehicle_registrations
   analysis_period:
     start: "2010-01-01"

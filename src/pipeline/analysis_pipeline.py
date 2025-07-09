@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 import pandas as pd
 from datetime import datetime
-
+import click
 from ..data_manager.data_collector import DataCollector
 from ..data_manager.load_data import load_data
 from ..modeling.bayesian_model import BayesianMarketShareModel
@@ -60,6 +60,7 @@ class AnalysisPipeline:
             self._run_step("data_preprocessing", self._preprocess_data)
             import sys
 
+            click.secho("END DEBUG", fg="red")
             sys.exit(0)
 
             # Step 3: Bayesian Modeling
