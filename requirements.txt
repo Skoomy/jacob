@@ -1,0 +1,39 @@
+# Jacob: Share of Voice vs Market Share Analysis Platform
+# Core dependencies for Nobel Prize-level analysis
+
+# CLI and utilities
+click>=8.0.0
+pyyaml>=6.0
+python-dotenv>=0.19.0
+
+# Data collection and processing
+pandas>=1.5.0
+numpy>=1.24.0
+pytrends>=4.9.0
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+
+# Bayesian modeling
+pymc>=5.0.0
+arviz>=0.15.0
+scipy>=1.10.0
+scikit-learn>=1.2.0
+
+# Visualization
+plotly>=5.15.0
+kaleido>=0.2.1
+
+# Development and testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+black>=22.0.0
+flake8>=5.0.0
+mypy>=1.0.0
+
+# Jupyter for development
+jupyter>=1.0.0
+jupyterlab>=3.6.0
+
+# Documentation
+sphinx>=5.0.0
+sphinx-rtd-theme>=1.2.0
