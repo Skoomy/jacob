@@ -45,7 +45,11 @@ setup-dirs:
 	@echo "Creating necessary directories..."
 	@mkdir -p output logs tests jupyterlab docs
 	@echo "✓ All directories created"
-
+	
+down:
+	@echo "$(YELLOW)Stopping services...$(NC)"
+	$(DOCKER_COMPOSE) down
+	@echo "$(GREEN)✅ Services stopped!$(NC)"
 
 # Start development environment
 dev-shell:
