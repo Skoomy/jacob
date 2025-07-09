@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 def cli(ctx, log_level, log_file, config):
     """Jacob: Share of Voice vs Market Share Analysis Platform.
 
-    A Nobel Prize-level analysis platform for testing Les Binet's hypothesis
+    Analysis platform for testing Les Binet's hypothesis
     that share of voice can predict market share across different industries.
     """
     ctx.ensure_object(dict)
@@ -41,34 +41,48 @@ def cli(ctx, log_level, log_file, config):
 
 
 @cli.command()
-@click.option("--industry", type=str, required=True, help="Industry to analyze (automotive, pharma, alcohol)")
-@click.option("--output-dir", type=click.Path(), default="output", help="Output directory")
+@click.option(
+    "--industry",
+    type=str,
+    required=True,
+    help="Industry to analyze (automotive, pharma, alcohol)",
+)
+@click.option(
+    "--output-dir", type=click.Path(), default="output", help="Output directory"
+)
 @click.pass_context
 def analyze(ctx, industry: str, output_dir: str):
     """Run the complete Share of Voice vs Market Share analysis pipeline."""
     logger.info(f"Starting analysis for {industry} industry")
-    
+
     config = ctx.obj["config"]
     config["industry"] = industry
     config["output_dir"] = Path(output_dir)
-    
+
     # Initialize pipeline
     pipeline = AnalysisPipeline(config)
-    
+
     # Run analysis
     results = pipeline.run()
-    
+
     # Generate reports
     report_generator = ReportGenerator(config)
     report_generator.generate_final_report(results)
-    
+
     logger.info("Analysis completed successfully")
     return results
 
 
 @cli.command()
-@click.option("--config-template", type=str, default="automotive", help="Template to use")
-@click.option("--output", type=click.Path(), default="config/custom.yaml", help="Output config file")
+@click.option(
+    "--config-template", type=str, default="automotive", help="Template to use"
+)
+@click.option(
+    "--output",
+    type=click.Path(),
+    default="config/custom.yaml",
+    help="Output config file",
+)
 def init_config(config_template: str, output: str):
     """Initialize a new configuration file for analysis."""
     logger.info(f"Creating config template for {config_template}")
@@ -77,19 +91,22 @@ def init_config(config_template: str, output: str):
 
 
 @cli.command()
-@click.option("--industry", type=str, required=True, help="Industry to collect data for")
+@click.option(
+    "--industry", type=str, required=True, help="Industry to collect data for"
+)
 @click.pass_context
 def collect_data(ctx, industry: str):
     """Collect data for the specified industry."""
     logger.info(f"Collecting data for {industry} industry")
-    
+
     config = ctx.obj["config"]
     config["industry"] = industry
-    
+
     from .data_manager.data_collector import DataCollector
+
     collector = DataCollector(config)
     collector.collect_all_data()
-    
+
     logger.info("Data collection completed")
 
 
