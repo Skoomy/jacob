@@ -52,6 +52,15 @@ class DataProcessor:
         logger.info("Processing Google Trends data")
 
         df = trends_data.copy()
+        # remove first two rows
+
+        df.columns = (
+            df.columns.str.strip()
+            .str.lower()
+            .str.replace(" ", "_")
+            .str.replace(r"[^a-z0-9_]", "", regex=True)
+        )
+        df.set_index("week", inplace=True)
 
         # Ensure datetime index
         if not isinstance(df.index, pd.DatetimeIndex):

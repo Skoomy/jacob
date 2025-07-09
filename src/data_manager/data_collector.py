@@ -209,17 +209,26 @@ class DataCollector:
         # except Exception as e:
         #     logger.error(f"Failed to collect related queries: {e}")
         # Collect Google Trends data source
-        google_trend_data_source = self.config.get("google_trend_data_source")
+        google_trend_data_source = industry_config.get("google_trend_data_source", "")
+        print(f"google_trend_data_source: {google_trend_data_source}")
+        print(f"industry_config: {industry_config}")
+
         if google_trend_data_source:
             logger.info(
-                f"Using pre-collected Google Trends data from  {google_trend_data_source}"
+                f"Using pre-collected Google Trends data from {google_trend_data_source}"
             )
-            collected_data["google_trends"] = pd.read_csv(google_trend_data_source)
-            import rich
+            try:
+                collected_data["google_trends"] = pd.read_csv(google_trend_data_source)
+                import rich
 
-            rich.print(
-                f"[green]Loaded Google Trends data from {google_trend_data_source}[/green]"
-            )
+                rich.print(collected_data)
+
+            except FileNotFoundError:
+                logger.warning(
+                    f"Google Trends data file not found: {google_trend_data_source}"
+                )
+            except Exception as e:
+                logger.error(f"Error loading Google Trends data: {e}")
         else:
             logger.warning("No Google Trends data source configured")
 

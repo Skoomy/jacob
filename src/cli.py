@@ -51,7 +51,9 @@ def cli(ctx, log_level, log_file, config):
     "--output-dir", type=click.Path(), default="output", help="Output directory"
 )
 @click.option(
-    "--config", type=click.Path(exists=True), help="Configuration file (overrides global config)"
+    "--config",
+    type=click.Path(exists=True),
+    help="Configuration file (overrides global config)",
 )
 @click.pass_context
 def analyze(ctx, industry: str, output_dir: str, config: Optional[str]):
@@ -63,7 +65,7 @@ def analyze(ctx, industry: str, output_dir: str, config: Optional[str]):
         analysis_config = ConfigManager.load_config(config)
     else:
         analysis_config = ctx.obj["config"].copy()
-    
+
     # Get industry-specific configuration
     try:
         industry_config = ConfigManager.get_industry_config(industry)
@@ -72,13 +74,18 @@ def analyze(ctx, industry: str, output_dir: str, config: Optional[str]):
             "brands": industry_config.brands,
             "search_terms": industry_config.search_terms,
             "market_data_source": industry_config.market_data_source,
+            "google_trend_data_source": industry_config.google_trend_data_source,
             "analysis_period": industry_config.analysis_period,
-            "seasonality_adjustments": getattr(industry_config, 'seasonality_adjustments', True)
+            "seasonality_adjustments": getattr(
+                industry_config, "seasonality_adjustments", True
+            ),
         }
     except ValueError:
-        logger.warning(f"No predefined configuration for {industry} industry, using basic config")
+        logger.warning(
+            f"No predefined configuration for {industry} industry, using basic config"
+        )
         analysis_config["industry"] = {"name": industry}
-    
+
     analysis_config["output_dir"] = Path(output_dir)
 
     # Initialize pipeline

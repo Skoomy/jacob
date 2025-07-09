@@ -74,7 +74,7 @@ class IndustryConfig:
     brands: list
     search_terms: list
     market_data_source: str
-    google_trend_data_source: str = (None,)
+    google_trend_data_source: str
     analysis_period: Dict[str, str]
     seasonality_adjustments: bool = True
 
@@ -96,6 +96,7 @@ class ConfigManager:
             "brands": ["Pfizer", "GSK", "AstraZeneca", "Novartis", "Roche"],
             "search_terms": ["covid vaccine", "flu shot", "medication"],
             "market_data_source": "uk_gov_pharmaceutical_sales",
+            "google_trend_data_source": "data/google_trend_pharma.csv",
             "analysis_period": {"start": "2020-01-01", "end": "2024-12-31"},
         },
         "alcohol": {
@@ -103,6 +104,7 @@ class ConfigManager:
             "brands": ["Guinness", "Stella Artois", "Budweiser", "Heineken"],
             "search_terms": ["beer", "lager", "guinness", "stella artois"],
             "market_data_source": "uk_gov_alcohol_sales",
+            "google_trend_data_source": "data/google_trend_alcohol.csv",
             "analysis_period": {"start": "2020-01-01", "end": "2024-12-31"},
         },
     }
